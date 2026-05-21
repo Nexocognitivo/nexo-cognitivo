@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Acesso Liberado | Nexo Cognitivo</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  /* ── RESET & BASE ────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #070d1a;
+    --bg2:       #0c1527;
+    --bg3:       #111e35;
+    --cyan:      #00d4ff;
+    --cyan-glow: rgba(0,212,255,.18);
+    --cyan-dim:  rgba(0,212,255,.08);
+    --blue:      #0ea5e9;
+    --white:     #f0f6ff;
+    --muted:     #7a9bb5;
+    --dim:       #2a3d55;
+    --gold:      #f4c94e;
+    --green:     #22d3a0;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── BACKGROUND ATMOSPHERE ───────────────────────── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      radial-gradient(ellipse 60% 40% at 50% 0%, rgba(0,212,255,.07) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 50% at 90% 80%, rgba(14,165,233,.05) 0%, transparent 60%);
+    pointer-events: none; z-index: 0;
+  }
+
+  /* grid overlay */
+  body::after {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      linear-gradient(rgba(0,212,255,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,212,255,.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ── LAYOUT ──────────────────────────────────────── */
+  .page-wrap {
+    position: relative; z-index: 1;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* ── TOP BAR ─────────────────────────────────────── */
+  .top-bar {
+    height: 4px;
+    background: linear-gradient(90deg, var(--cyan), var(--blue), var(--cyan));
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
+  }
+  @keyframes shimmer {
+    0%   { background-position: 0% 0; }
+    100% { background-position: 200% 0; }
+  }
+
+  /* ── LOGO / BRAND ────────────────────────────────── */
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 28px 0 0;
+    opacity: .7;
+    animation: fadeDown .6s ease both;
+  }
+  .brand-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 10px var(--cyan);
+  }
+  .brand-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--cyan);
+  }
+
+  /* ── HERO SECTION ────────────────────────────────── */
+  .hero {
+    text-align: center;
+    padding: 60px 0 48px;
+    animation: fadeUp .7s ease .1s both;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--cyan-dim);
+    border: 1px solid rgba(0,212,255,.25);
+    border-radius: 99px;
+    padding: 7px 18px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 28px;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    animation: pulse 2s ease infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: .5; transform: scale(1.4); }
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(32px, 6vw, 54px);
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+  .hero h1 span {
+    color: var(--cyan);
+    text-shadow: 0 0 30px rgba(0,212,255,.4);
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    color: var(--muted);
+    max-width: 540px;
+    margin: 0 auto 36px;
+    font-weight: 400;
+  }
+
+  /* Confirmação de compra */
+  .confirm-box {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(34,211,160,.07);
+    border: 1px solid rgba(34,211,160,.3);
+    border-radius: 12px;
+    padding: 14px 24px;
+    font-size: 14px;
+    color: var(--green);
+    font-weight: 500;
+  }
+  .confirm-box .check-icon {
+    width: 22px; height: 22px;
+    background: var(--green);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 12px;
+    color: #070d1a;
+    font-weight: 800;
+  }
+
+  /* ── DIVIDER ─────────────────────────────────────── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--dim), transparent);
+    margin: 0 0 48px;
+  }
+
+  /* ── SECTION TITLE ───────────────────────────────── */
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--cyan);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--dim);
+  }
+
+  /* ── STEPS BLOCK ─────────────────────────────────── */
+  .steps-block {
+    animation: fadeUp .7s ease .2s both;
+    margin-bottom: 48px;
+  }
+
+  .steps-intro {
+    font-size: 20px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .steps-intro-sub {
+    font-size: 15px;
+    color: var(--muted);
+    margin-bottom: 32px;
+  }
+
+  .steps {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .step {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    background: var(--bg2);
+    border: 1px solid var(--dim);
+    border-radius: 14px;
+    padding: 20px 22px;
+    transition: border-color .25s, box-shadow .25s;
+  }
+  .step:hover {
+    border-color: rgba(0,212,255,.35);
+    box-shadow: 0 0 24px rgba(0,212,255,.06);
+  }
+
+  .step-num {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    border: 2px solid var(--cyan);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--cyan);
+    flex-shrink: 0;
+    background: var(--cyan-dim);
+    box-shadow: 0 0 14px rgba(0,212,255,.12);
+  }
+
+  .step-body h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+  .step-body p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .step-body p strong {
+    color: var(--cyan);
+    font-weight: 500;
+  }
+  .step-body .tip {
+    display: inline-block;
+    margin-top: 8px;
+    background: rgba(244,201,78,.07);
+    border: 1px solid rgba(244,201,78,.25);
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 12px;
+    color: var(--gold);
+  }
+  .tip-icon { margin-right: 4px; }
+
+  /* ── CTA BUTTON ──────────────────────────────────── */
+  .cta-block {
+    text-align: center;
+    margin-bottom: 48px;
+    animation: fadeUp .7s ease .3s both;
+  }
+
+  .cta-label {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #00c4ed, #0ea5e9);
+    color: #070d1a;
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: .5px;
+    text-decoration: none;
+    border-radius: 12px;
+    padding: 18px 40px;
+    box-shadow: 0 8px 32px rgba(0,196,237,.25), 0 0 0 0 rgba(0,212,255,.4);
+    transition: transform .2s, box-shadow .2s;
+    animation: glow-pulse 3s ease infinite;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(0,196,237,.35);
+  }
+  @keyframes glow-pulse {
+    0%,100% { box-shadow: 0 8px 32px rgba(0,196,237,.25); }
+    50%      { box-shadow: 0 8px 40px rgba(0,196,237,.45); }
+  }
+
+  .btn-arrow { font-size: 18px; }
+
+  .btn-note {
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--dim);
+  }
+
+  /* ── WHAT'S INSIDE ───────────────────────────────── */
+  .inside-block {
+    animation: fadeUp .7s ease .35s both;
+    margin-bottom: 48px;
+  }
+
+  .inside-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+  .inside-sub {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+
+  .modules-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+  @media (max-width: 500px) {
+    .modules-grid { grid-template-columns: 1fr; }
+  }
+
+  .module-card {
+    background: var(--bg2);
+    border: 1px solid var(--dim);
+    border-radius: 12px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    transition: border-color .2s;
+  }
+  .module-card:hover { border-color: rgba(0,212,255,.25); }
+
+  .module-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .module-card h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 3px;
+  }
+  .module-card p {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  /* ── SUPPORT BLOCK ───────────────────────────────── */
+  .support-block {
+    background: var(--bg2);
+    border: 1px solid var(--dim);
+    border-radius: 16px;
+    padding: 28px;
+    text-align: center;
+    animation: fadeUp .7s ease .4s both;
+    margin-bottom: 48px;
+  }
+  .support-block h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+  .support-block p {
+    font-size: 14px;
+    color: var(--muted);
+    max-width: 480px;
+    margin: 0 auto 18px;
+  }
+  .support-block a {
+    color: var(--cyan);
+    text-decoration: none;
+    font-weight: 500;
+    border-bottom: 1px solid rgba(0,212,255,.3);
+    transition: border-color .2s;
+  }
+  .support-block a:hover { border-color: var(--cyan); }
+
+  /* ── MOTIVATIONAL CLOSER ─────────────────────────── */
+  .closer {
+    text-align: center;
+    border-top: 1px solid var(--dim);
+    padding-top: 40px;
+    animation: fadeUp .7s ease .45s both;
+  }
+  .closer-quote {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(18px, 3.5vw, 24px);
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.4;
+    margin-bottom: 12px;
+  }
+  .closer-quote span { color: var(--cyan); }
+  .closer-sub {
+    font-size: 14px;
+    color: var(--muted);
+    margin-bottom: 24px;
+  }
+  .brand-footer {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  /* ── ANIMATIONS ──────────────────────────────────── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to   { opacity: .7; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar"></div>
+
+<div class="page-wrap">
+
+  <!-- ── BRAND ── -->
+  <div class="brand">
+    <div class="brand-dot"></div>
+    <div class="brand-name">Nexo Cognitivo</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════
+       BLOCO 1 — HERO: CONFIRMAÇÃO + IMPACTO
+  ══════════════════════════════════════════════ -->
+  <section class="hero">
+    <div class="hero-badge">Pagamento Confirmado</div>
+
+    <h1>Seu acesso ao<br/><span>Nexo Cognitivo</span><br/>está liberado!</h1>
+
+    <p class="hero-sub">
+      Parabéns — você acabou de dar o passo mais importante do seu TCC.
+      A partir de agora, a IA trabalha para você.
+    </p>
+
+    <div class="confirm-box">
+      <div class="check-icon">✓</div>
+      Compra aprovada · Literature Review 2.0 · R$&nbsp;97,00
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════════════
+       BLOCO 2 — PASSO A PASSO DE ACESSO
+       (foco em reduzir suporte)
+  ══════════════════════════════════════════════ -->
+  <section class="steps-block">
+
+    <div class="section-title">Como acessar agora</div>
+
+    <p class="steps-intro">3 passos simples. Leva menos de 2 minutos.</p>
+    <p class="steps-intro-sub">
+      O acesso é liberado automaticamente — sem complicação.
+    </p>
+
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h3>Verifique o seu e-mail</h3>
+          <p>
+            A Kiwify já enviou um e-mail para <strong>o endereço que você cadastrou no momento do pagamento</strong>.
+            Ele chega em poucos minutos com o botão de acesso ao curso.
+          </p>
+          <span class="tip"><span class="tip-icon">⚠️</span> Não encontrou? Verifique as pastas <strong>Spam</strong>, <strong>Promoções</strong> e <strong>Lixo Eletrônico</strong>.</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h3>Clique em "Acessar meu produto"</h3>
+          <p>
+            Dentro do e-mail da Kiwify, procure pelo botão
+            <strong>"Acessar meu produto"</strong> ou <strong>"Clique aqui para acessar"</strong>.
+            Ele vai criar a sua senha e ativar o seu login na área de membros.
+          </p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h3>Entre na área de membros e comece</h3>
+          <p>
+            Você vai cair direto na plataforma do Nexo Cognitivo.
+            Comece pelo <strong>Módulo 1 — Planeamento &amp; Fundação</strong>
+            e siga o Cronograma de 30 Dias para o TCC Imbatível.
+          </p>
+          <span class="tip"><span class="tip-icon">💡</span> Salve o link da área de membros nos seus favoritos para acessar a qualquer hora.</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       BLOCO 3 — CTA PRINCIPAL
+  ══════════════════════════════════════════════ -->
+  <section class="cta-block">
+    <p class="cta-label">Acesso imediato via e-mail cadastrado na compra</p>
+    <a href="#" class="btn-primary">
+      Acessar Minha Área de Membros
+      <span class="btn-arrow">→</span>
+    </a>
+    <p class="btn-note">
+      (Você será redirecionado para a plataforma Kiwify)
+    </p>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ══════════════════════════════════════════════
+       BLOCO 4 — O QUE VOCÊ DESBLOQUEOU
+  ══════════════════════════════════════════════ -->
+  <section class="inside-block">
+
+    <div class="section-title">O que você desbloqueou</div>
+
+    <p class="inside-title">Tudo que você precisa para tirar nota 10 no TCC.</p>
+    <p class="inside-sub">4 módulos completos + ferramentas interativas de IA.</p>
+
+    <div class="modules-grid">
+
+      <div class="module-card">
+        <div class="module-icon">🎯</div>
+        <div>
+          <h4>Módulo 1 — Planeamento &amp; Fundação</h4>
+          <p>Valide o tema, monte o outline e elimine o medo da página em branco.</p>
+        </div>
+      </div>
+
+      <div class="module-card">
+        <div class="module-icon">🔍</div>
+        <div>
+          <h4>Módulo 2 — Pesquisa &amp; Fontes</h4>
+          <p>Revisão de literatura com IA: Consensus, Elicit e método de síntese.</p>
+        </div>
+      </div>
+
+      <div class="module-card">
+        <div class="module-icon">✍️</div>
+        <div>
+          <h4>Módulo 3 — Escrita &amp; Desenvolvimento</h4>
+          <p>Escreva capítulo a capítulo com o método TS-E-A e Co-Pilot acadêmico.</p>
+        </div>
+      </div>
+
+      <div class="module-card">
+        <div class="module-icon">🏆</div>
+        <div>
+          <h4>Módulo 4 — Revisão &amp; Defesa</h4>
+          <p>Simule a banca examinadora com IA, formate em ABNT e apresente com confiança.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       BLOCO 5 — SUPORTE (redução de ticket)
+  ══════════════════════════════════════════════ -->
+  <section class="support-block">
+    <h3>Precisa de ajuda?</h3>
+    <p>
+      Se o e-mail não chegou após 30 minutos — mesmo depois de verificar spam e promoções —
+      entre em contato com o nosso suporte. Respondemos em até 24h úteis.
+    </p>
+    <a href="mailto:suporte@nexocognitivo.com.br">suporte@nexocognitivo.com.br</a>
+    <br/><br/>
+    <p style="font-size:12px; color: var(--dim); margin:0;">
+      Informe no e-mail: nome completo · endereço de e-mail usado na compra · número do pedido Kiwify
+    </p>
+  </section>
+
+  <!-- ══════════════════════════════════════════════
+       BLOCO 6 — FECHAMENTO MOTIVACIONAL
+  ══════════════════════════════════════════════ -->
+  <section class="closer">
+    <p class="closer-quote">
+      Você não comprou um curso.<br/>
+      Você comprou <span>clareza, método e aprovação.</span>
+    </p>
+    <p class="closer-sub">
+      O TCC que parecia impossível vai ser entregue — e com nota 10.
+    </p>
+    <div class="brand-footer">Nexo Cognitivo · Literature Review 2.0</div>
+  </section>
+
+</div><!-- /page-wrap -->
+</body>
+</html>
